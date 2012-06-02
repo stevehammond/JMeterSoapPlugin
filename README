@@ -74,3 +74,4 @@ Copy the demo_server.0.1.war to your Tomcat webapps folder. Then start Tomcat:
 Now you can access the new service:
 http://localhost:8080/demo_server.0.1/calc-service/calcServiceDefinition.wsdl
 
+

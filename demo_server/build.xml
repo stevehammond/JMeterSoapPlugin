@@ -9,33 +9,49 @@
 
 		<javac destdir="${calc-classes-folder}" debug="true">
 			<classpath>
-				<fileset dir="${lib-folder}" includes="**/*.jar" />
+				<fileset dir="${lib-folder}/spring/" includes="**/*.jar" />
 		    </classpath>
 			<src path="${service-source-folder}" />
 			<src path="${generated-source-folder}" />
 		</javac>
 	</target>
+	 
+	<!-- I prefer to use Tomcat6 in this case
+	<target name="run" depends="package-calc-classes">
+	  <path id="jetty.plugin.classpath">
+	    <fileset dir="${lib-folder}/jetty/" includes="*.jar"/>
+	  </path>
+	  <taskdef classpathref="jetty.plugin.classpath" resource="tasks.properties" loaderref="jetty.loader" />
+	  <jetty tempDirectory="temp">
+    	<webApp name="demo_server" 
+      		 warfile="${calc-dist-folder}/${ant.project.name}.${revision}.war"
+       		 contextpath="/demo_server" />
+      </jetty>
+	</target>-->
 
 	<target name="package-calc-classes" depends="compile-calc-classes">
 		<delete dir="${calc-dist-folder}" />
 		<mkdir dir="${calc-dist-folder}" />
 
-		<jar jarfile="${calc-dist-folder}/${ant.project.name}.${revision}.war">
-			<fileset dir="${calc-classes-folder}">
-				<include name="**/*.class" />
-			</fileset>
-
-			<fileset dir="${lib-folder}">
+		<war destfile="${calc-dist-folder}/${ant.project.name}.${revision}.war"
+			 webxml="${calc-resource-folder}/WEB-INF/web.xml">
+			<classes dir="${calc-classes-folder}" />
+			<lib dir="${lib-folder}/spring/">
 				<include name="**/*.jar" />
-				<exclude name="**/trang.jar" />
-			</fileset>
+			</lib>
+			<lib dir="${lib-folder}/apache/">
+				<include name="**/*.jar" />
+			</lib>
+			<lib dir="${lib-folder}/wsdl4j/">
+				<include name="**/*.jar" />
+			</lib>
 
 			<fileset dir="${calc-resource-folder}">
 				<include name="**/*.xml" />
 				<include name="**/*.xsd" />
 				<exclude name="**/*.generated.xsd" />
 			</fileset>
-		</jar>
+		</war>
 	</target>
 
 </project>

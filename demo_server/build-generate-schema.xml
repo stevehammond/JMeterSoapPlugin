@@ -6,7 +6,7 @@
     <target name="generate-schema" description="Generates schema from XML sample with Trang">
         <mkdir dir="${xsd-folder}" />
      
-        <java jar="${lib-folder}/trang.jar" fork="true">
+        <java jar="${lib-folder}/trang/trang.jar" fork="true">
             <arg value="${xml-example-folder}/calc_request.xml" />
             <arg value="${xsd-folder}/calc.generated.xsd" />
         </java>

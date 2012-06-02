@@ -4,7 +4,6 @@ dist/
 built/
 build/
 classes/
-lib/
 bak/
 env/
 apache-jmeter*/

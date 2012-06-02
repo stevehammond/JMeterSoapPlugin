@@ -10,15 +10,14 @@
         http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
     <oxm:jaxb2-marshaller id="marshaller"
-        contextPath="org.testingsoftware.calc.service" />
+        contextPath="org.testingsoftware.calc" />
 
     <bean class="org.springframework.ws.server.endpoint.adapter.GenericMarshallingMethodEndpointAdapter">
         <constructor-arg ref="marshaller" />
     </bean>
 
     <bean
-        class="org.springframework.ws.server.endpoint.mapping
-        .PayloadRootAnnotationMethodEndpointMapping">
+        class="org.springframework.ws.server.endpoint.mapping.PayloadRootAnnotationMethodEndpointMapping">
         <property name="interceptors">
             <list>
                 <ref local="validatingInterceptor" />
