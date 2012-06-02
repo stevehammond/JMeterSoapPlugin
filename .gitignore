@@ -1,0 +1,19 @@
+# Folders
+research/
+dist/
+built/
+build/
+classes/
+lib/
+bak/
+env/
+apache-jmeter*/
+apache-tomcat*/
+soapui*/
+
+*.*~
+*~
+.coverage
+*.bak
+*.tar.gz
+*.jar

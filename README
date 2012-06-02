@@ -1,0 +1,68 @@
+
+
+
+http://localhost:8080/echo-server/echo.wsdl
+
+curl -d @soap.xml "http://localhost:8080/echo/services"
+
+
+
+installed tomcat6 on my Ubuntu machine
+--------------------------------------
+sudo apt-get install tomcat6
+
+deployed the war
+----------------
+cp tutorial.war /var/lib/tomcat6/webapps/
+
+Access the tutorial app
+-----------------------
+http://localhost:8080/tutorial/holidayService/holiday.wsdl
+
+http://localhost:8080/tutorial/holidayService/
+
+
+Create simple Webservice log
+----------------------------
+
+started from this excellent tutorial:
+http://blog.espenberntsen.net/2010/02/26/generate-jaxb-classes-from-an-xsd-schema-and-the-schema-from-an-xml-sample-document/
+
+how to generate an XSD schema from a sample XML document 
+
+<addRequest>
+  <value>1</value>
+  <value>2</value>
+</addRequest>
+
+The XSD schema is generated from the sample using the Trang project which lives here: http://code.google.com/p/jing-trang/
+
+build -f build-generate-schema.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:element name="addRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="value"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="value" type="xs:integer"/>
+</xs:schema>
+
+
+Generating class files from XSD using JAXB
+------------------------------------------
+
+From Java 1.6 on JAXB is included! So nothing to install/download here. This will generate some class files in the src/org/testingsoftware/org/generated folder:
+ant -f build-generate-jaxb.xml
+
+
+Where is the WSDL?
+------------------
+
+You don’t need to create a WSDL file with Spring WS.
+
+
+

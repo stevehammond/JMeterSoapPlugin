@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." default="generate-schema" name="demo_server">
+
+    <property file="build.properties" />
+
+    <target name="generate-schema" description="Generates schema from XML sample with Trang">
+        <mkdir dir="${xsd-folder}" />
+     
+        <java jar="${lib-folder}/trang.jar" fork="true">
+            <arg value="${xml-example-folder}/calc_request.xml" />
+            <arg value="${xsd-folder}/calc.generated.xsd" />
+        </java>
+     
+        <echo message="${xsd-folder}/calc.generated.xsd was generated" />
+    </target>
+
+</project>
+

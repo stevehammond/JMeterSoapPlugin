@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.testing-software.org/calc" xmlns:o="http://www.testing-software.org/calc">
+
+  <xs:element name="addRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="a" type="xs:integer" />
+        <xs:element name="b" type="xs:integer" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="addResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="result" type="xs:integer" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>
+<!--?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://javacrumbs.net/calc"
+    xmlns:tns="http://javacrumbs.net/calc" elementFormDefault="qualified">
+
+    <element name="plusRequest">
+        <complexType>
+            <sequence>
+                <element name="a" type="int" />
+                <element name="b" type="int" />
+            </sequence>
+        </complexType>
+    </element>
+
+    <element name="plusResponse">
+        <complexType>
+            <sequence>
+                <element name="result" type="int" />
+            </sequence>
+        </complexType>
+    </element>
+</schema-->

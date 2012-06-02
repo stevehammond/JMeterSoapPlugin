@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." default="package-calc-classes" name="demo_server">
+
+	<property file="build.properties" />
+
+	<target name="compile-calc-classes">
+		<delete dir="${calc-classes-folder}" />
+		<mkdir dir="${calc-classes-folder}" />
+
+		<javac destdir="${calc-classes-folder}" debug="true">
+			<classpath>
+				<fileset dir="${lib-folder}" includes="**/*.jar" />
+		    </classpath>
+			<src path="${service-source-folder}" />
+			<src path="${generated-source-folder}" />
+		</javac>
+	</target>
+
+	<target name="package-calc-classes" depends="compile-calc-classes">
+		<delete dir="${calc-dist-folder}" />
+		<mkdir dir="${calc-dist-folder}" />
+
+		<jar jarfile="${calc-dist-folder}/${ant.project.name}.${revision}.war">
+			<fileset dir="${calc-classes-folder}">
+				<include name="**/*.class" />
+			</fileset>
+
+			<fileset dir="${lib-folder}">
+				<include name="**/*.jar" />
+				<exclude name="**/trang.jar" />
+			</fileset>
+
+			<fileset dir="${calc-resource-folder}">
+				<include name="**/*.xml" />
+				<include name="**/*.xsd" />
+				<exclude name="**/*.generated.xsd" />
+			</fileset>
+		</jar>
+	</target>
+
+</project>
