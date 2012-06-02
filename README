@@ -56,6 +56,7 @@ Generating class files from XSD using JAXB
 ------------------------------------------
 
 From Java 1.6 on JAXB is included! So nothing to install/download here. This will generate some class files in the src/org/testingsoftware/org/generated folder:
+
 ant -f build-generate-jaxb.xml
 
 
