@@ -9,7 +9,7 @@ import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 @Endpoint
 public class CalcService {
 
-    @PayloadRoot(localPart="plusRequest",  namespace="http://www.testing-software.org/calc")
+    @PayloadRoot(localPart="addRequest",  namespace="http://www.testing-software.org/calc")
     public AddResponse add(AddRequest data) {
         AddResponse result = new AddResponse();
         result.setResult(data.getA().add(data.getB()) );

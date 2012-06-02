@@ -1,41 +1,20 @@
+Implementing a simple Soap webservice
+=====================================
 
-
-
-http://localhost:8080/echo-server/echo.wsdl
-
-curl -d @soap.xml "http://localhost:8080/echo/services"
-
-
-
-installed tomcat6 on my Ubuntu machine
---------------------------------------
-sudo apt-get install tomcat6
-
-deployed the war
-----------------
-cp tutorial.war /var/lib/tomcat6/webapps/
-
-Access the tutorial app
------------------------
-http://localhost:8080/tutorial/holidayService/holiday.wsdl
-
-http://localhost:8080/tutorial/holidayService/
-
-
-Create simple Webservice log
-----------------------------
-
-started from this excellent tutorial:
+This section describes how I created a simple webservice. I started from this excellent tutorial:
 http://blog.espenberntsen.net/2010/02/26/generate-jaxb-classes-from-an-xsd-schema-and-the-schema-from-an-xml-sample-document/
 
-how to generate an XSD schema from a sample XML document 
+Generating an XSD schema from a sample XML document 
+---------------------------------------------------
+
+Here a sample XML file for a start:
 
 <addRequest>
-  <value>1</value>
-  <value>2</value>
+  <a>10</a>
+  <b>20</b>
 </addRequest>
 
-The XSD schema is generated from the sample using the Trang project which lives here: http://code.google.com/p/jing-trang/
+The XSD schema is generated from the sample XML using the Trang project which lives here: http://code.google.com/p/jing-trang/
 
 build -f build-generate-schema.xml
 
@@ -51,11 +30,35 @@ build -f build-generate-schema.xml
   <xs:element name="value" type="xs:integer"/>
 </xs:schema>
 
+The XSD needs some tweaking (here the finalized version):
+
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.testing-software.org/calc" xmlns:o="http://www.testing-software.org/calc">
+
+  <xs:element name="addRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="a" type="xs:integer" />
+        <xs:element name="b" type="xs:integer" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="addResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="result" type="xs:integer" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>
+
 
 Generating class files from XSD using JAXB
 ------------------------------------------
 
-From Java 1.6 on JAXB is included! So nothing to install/download here. This will generate some class files in the src/org/testingsoftware/org/generated folder:
+From Java 1.6 on JAXB is included! So nothing to install/download here. JAXB will generate some class files in the src/org/testingsoftware/org/generated folder:
 
 ant -f build-generate-jaxb.xml
 
@@ -63,16 +66,67 @@ ant -f build-generate-jaxb.xml
 Where is the WSDL?
 ------------------
 
-You don’t need to create a WSDL file with Spring WS.
+You don’t need to create a WSDL file with Spring WS. WSDL4J does create the WSDL dynamically for you.
 
 
-Deploy the demo_server webservice and start Tomcat
---------------------------------------------------
+Building the war file
+---------------------
 
-Copy the demo_server.0.1.war to your Tomcat webapps folder. Then start Tomcat:
+To build just run ant:
+
+ant
+
+
+Deploying the demo_server webservice and starting Tomcat
+--------------------------------------------------------
+
+Copy the demo_server.0.1.war you find in the dist folder to your Tomcat webapps folder. Then start Tomcat:
 ./server.sh
 
 Now you can access the new service:
 http://localhost:8080/demo_server.0.1/calc-service/calcServiceDefinition.wsdl
 
 
+Playing with the demo_server
+----------------------------
+
+In case you do not provide valid integers as parameters, you get a nice SoapFault:
+
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
+   <SOAP-ENV:Header/>
+   <SOAP-ENV:Body>
+      <SOAP-ENV:Fault>
+         <faultcode>SOAP-ENV:Client</faultcode>
+         <faultstring xml:lang="en">Validation error</faultstring>
+         <detail>
+            <spring-ws:ValidationError xmlns:spring-ws="http://springframework.org/spring-ws">cvc-datatype-valid.1.2.1: 'xy' is not a valid value for 'integer'.</spring-ws:ValidationError>
+            <spring-ws:ValidationError xmlns:spring-ws="http://springframework.org/spring-ws">cvc-type.3.1.3: The value 'xy' of element 'calc:a' is not valid.</spring-ws:ValidationError>
+         </detail>
+      </SOAP-ENV:Fault>
+   </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>
+
+Once you provide valid input like the following:
+
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:calc="http://www.testing-software.org/calc">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <calc:addRequest>
+         <calc:a>10</calc:a>
+         <calc:b>20</calc:b>
+      </calc:addRequest>
+   </soapenv:Body>
+</soapenv:Envelope>
+
+...the CalcService does a nice job:
+
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
+   <SOAP-ENV:Header/>
+   <SOAP-ENV:Body>
+      <ns2:addResponse xmlns:ns2="http://www.testing-software.org/calc">
+         <ns2:result>30</ns2:result>
+      </ns2:addResponse>
+   </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>
+
+Now the demo_server is ready to be used.
