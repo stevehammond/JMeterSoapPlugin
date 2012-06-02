@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-xmlns="http://www.springframework.org/schema/beans"
+<beans xmlns="http://www.springframework.org/schema/beans"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:oxm="http://www.springframework.org/schema/oxm"
     xmlns:context="http://www.springframework.org/schema/context"
-    xsi:schemaLocation="http://www.springframework.org/schema/oxm
+    xsi:schemaLocation="http://www.springframework.org/schema/oxm 
     http://www.springframework.org/schema/oxm/spring-oxm-3.0.xsd
-        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans 
         http://www.springframework.org/schema/beans/spring-beans.xsd
-        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context 
         http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
     <oxm:jaxb2-marshaller id="marshaller"
@@ -30,17 +30,16 @@ xmlns="http://www.springframework.org/schema/beans"
 
     <bean id="validatingInterceptor"
         class="org.springframework.ws.soap.server.endpoint.interceptor.PayloadValidatingInterceptor">
-        <property name="schema" value="/WEB-INF/schemas/calc.xsd" />
+        <property name="schema" value="/WEB-INF/calc.xsd" />
         <property name="validateRequest" value="true" />
         <property name="validateResponse" value="true" />
     </bean>
 
-    <bean name="accountBalanceServiceDefinition"
+    <bean name="calcServiceDefinition"
         class="org.springframework.ws.wsdl.wsdl11.DefaultWsdl11Definition">
         <property name="schema">
             <bean class="org.springframework.xml.xsd.SimpleXsdSchema">
-                <property name="xsd"
-                    value="/WEB-INF/schemas/calc.xsd" />
+                <property name="xsd" value="/WEB-INF/calc.xsd" />
             </bean>
         </property>
         <property name="portTypeName" value="CalcService" />
