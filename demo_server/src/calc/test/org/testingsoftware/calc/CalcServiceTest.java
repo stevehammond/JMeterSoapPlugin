@@ -1,8 +1,8 @@
-...
+package org.testingsoftware.calc;
 
 import static org.junit.Assert.assertEquals;
 
-import java.math.BigDecimal;
+import java.math.BigInteger;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,9 +14,9 @@ import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.client.support.interceptor.WebServiceValidationException;
 import org.springframework.ws.soap.client.SoapFaultClientException;
 
-import AddRequest;
-import AddResponse;
-import ObjectFactory;
+import org.testingsoftware.calc.AddRequest;
+import org.testingsoftware.calc.AddResponse;
+import org.testingsoftware.calc.ObjectFactory;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("test-config.xml")
@@ -26,23 +26,23 @@ public class CalcServiceTest {
 	@Qualifier("webServiceTemplate")
 	private WebServiceTemplate webServiceTemplate;
 
-	@Autowired
-	@Qualifier("webServiceTemplateWithClientValidator")
-	private WebServiceTemplate webServiceTemplateWithClientValidator;
+	// @Autowired
+	// @Qualifier("webServiceTemplateWithClientValidator")
+	// private WebServiceTemplate webServiceTemplateWithClientValidator;
 
 	@Test
 	public void testCalcService() {
 
-		CalcRequest request = new ObjectFactory()
-				.createCalcRequest();
-		request.setName("xxx");
-		request.setNumber("yyy");
-		CalcResponse response = (CalcResponse) webServiceTemplate
+		AddRequest request = new ObjectFactory().createAddRequest();
+		request.setA(BigInteger.valueOf(10));
+		request.setB(BigInteger.valueOf(20));
+		AddResponse response = (AddResponse) webServiceTemplate
 				.marshalSendAndReceive(request);
 
-		assertEquals(BigDecimal.valueOf(100.5), response.getBalance());
+		assertEquals(BigInteger.valueOf(30), response.getResult());
 	}
 
+/*
 	@Test(expected = SoapFaultClientException.class)
 	public void testCalcServiceWithTooLongAccountNumber() {
 
@@ -87,4 +87,5 @@ public class CalcServiceTest {
 		webServiceTemplateWithClientValidator.marshalSendAndReceive(request);
 
 	}
+	*/
 }

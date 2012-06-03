@@ -6,7 +6,8 @@ JMeter already has a WebService(SOAP) Request which works fine. Unfortunately it
 Plugin Installation
 -------------------
 
-The installation is quite simple just download JMeterSoapPlugin.jar and put it in $JMETER_HOME/lib/ext. Once you restart JMeter you should see a new option under Add -> Samplers called "Enhanced JDBC Request". It works just like the standard WebService(SOAP) Request.
+The installation is quite simple just download jmetersoapplugin.jar and put it in $JMETER_HOME/lib/ext. Once you restart JMeter you should see a new option under Add -> Samplers called "Enhanced JDBC Request". It works just like the standard WebService(SOAP) Request.
+You will also need the spring-ws client libraries.
 
 
 Implementing a simple Soap webservice
@@ -141,3 +142,14 @@ Once you provide valid input like the following:
 </SOAP-ENV:Envelope>
 
 Now the demo_server is ready to be used.
+
+
+Implementing a simple Soap webservice client
+============================================
+
+This section describes how I created a simple webservice client. I started from this excellent tutorial:
+http://blog.espenberntsen.net/2010/02/28/spring-ws-client/
+
+
+
+
