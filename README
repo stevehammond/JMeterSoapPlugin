@@ -9,6 +9,11 @@ Plugin Installation
 The installation is quite simple just download jmetersoapplugin.jar and put it in $JMETER_HOME/lib/ext. Once you restart JMeter you should see a new option under Add -> Samplers called "Enhanced JDBC Request". It works just like the standard WebService(SOAP) Request.
 You will also need the spring-ws client libraries.
 
+Additional libs for JMeter in lib/ext:
+o spring-ws-2.1.0.RELEASE-all
+o springframework.*-3.1.0.RELEASE
+o 
+
 
 Implementing a simple Soap webservice
 =====================================

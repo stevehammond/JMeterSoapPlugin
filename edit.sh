@@ -7,7 +7,7 @@ PORT=8080
 #DURATION=36000
 
 # start jmeter in GUI mode
-$JMETER -ttestplan/plugin-experiment.jmx -l_jmeter/results.txt.$SUFFIX \
+$JMETER -ttestplan/plugin-calc-service.jmx -l_jmeter/results.txt.$SUFFIX \
     -j_jmeter/jmeter.log.$SUFFIX -Jduration=$DURATION \
     -Jhost=$HOST -Jport=$PORT
 

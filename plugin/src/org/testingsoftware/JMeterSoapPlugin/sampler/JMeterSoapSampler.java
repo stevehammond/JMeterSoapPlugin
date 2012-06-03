@@ -39,6 +39,13 @@ import org.apache.jorphan.util.JMeterStopThreadException;
 import org.apache.jorphan.util.JOrphanUtils;
 import org.apache.log.Logger;
 
+import java.io.StringReader;
+//import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+import org.springframework.xml.transform.StringResult;
+import org.springframework.xml.transform.ResourceSource;
+import org.springframework.ws.client.core.WebServiceTemplate;
+
 /**
  *
  */
@@ -61,7 +68,26 @@ public class JMeterSoapSampler extends AbstractSampler
     private transient String data;
 
 
+
+    private static String sendSoapMsg(String uri, String msg) {
+        // assembles the soap message and sends it to uri
+        WebServiceTemplate webServiceTemplate = new WebServiceTemplate();
+
+        StreamSource source = new StreamSource(new StringReader(msg));
+        StringResult result = new StringResult();
+
+        webServiceTemplate.sendSourceAndReceiveToResult(uri, source, result);
+        return result.toString();
+    }
+
+
     public SampleResult sample(Entry e) {
+
+        String msg = "      <calc:addRequest xmlns:calc=\"http://www.testing-software.org/calc\" >"
+            + "         <calc:a>20</calc:a>"
+            + "         <calc:b>10</calc:b>"
+            + "      </calc:addRequest>";
+
         log.debug("sampling");
         
         SampleResult res = new SampleResult();
@@ -69,18 +95,24 @@ public class JMeterSoapSampler extends AbstractSampler
         res.setSamplerData(toString());
         res.setDataType(SampleResult.TEXT);
         // Bug 31184 - make sure encoding is specified
-        //res.setDataEncoding(System.getProperty("file.encoding"));
+        res.setDataEncoding("ISO-8895-1");
 
+        res.sampleStart();
         // Assume we will be successful
         res.setSuccessful(true);
 
-        res.sampleStart();
-        res.setResponseData("say hi from soap plugin");
+        String uri = "http://" + getHost() + ":" + getPort() + getPath();
+        String result = sendSoapMsg(uri, getData());
+        res.setResponseData(result);
 
         res.sampleEnd();
         return res;
-
     }
+
+    public String toString() {
+        return getData();
+    }
+
 
     // getters & setters
     public String getHost() {

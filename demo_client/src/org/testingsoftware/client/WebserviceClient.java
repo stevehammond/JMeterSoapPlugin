@@ -9,7 +9,7 @@ import javax.xml.transform.Source;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.ws.WebServiceMessageFactory;
-import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
+//import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
 import org.springframework.xml.transform.ResourceSource;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.ws.client.core.WebServiceTemplate;
