@@ -4,8 +4,8 @@
   <xs:element name="addRequest">
     <xs:complexType>
       <xs:sequence>
-        <xs:element name="a" type="xs:integer" />
-        <xs:element name="b" type="xs:integer" />
+        <xs:element name="a" type="xs:nonNegativeInteger" />
+        <xs:element name="b" type="xs:nonNegativeInteger" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -13,7 +13,7 @@
   <xs:element name="addResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element name="result" type="xs:integer" />
+        <xs:element name="result" type="xs:nonNegativeInteger" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
