@@ -1,3 +1,14 @@
+Implementing a Soap Plugin for Apache JMeter
+============================================
+
+JMeter already has a WebService(SOAP) Request which works fine. Unfortunately it can not handle authentication. This is why I had to write this plugin. The plugin uses a interface very similar to WebService(SOAP) Request. My hope is that later JMeter will adopt the authentication feature to JMeter core.
+
+Plugin Installation
+-------------------
+
+The installation is quite simple just download JMeterSoapPlugin.jar and put it in $JMETER_HOME/lib/ext. Once you restart JMeter you should see a new option under Add -> Samplers called "Enhanced JDBC Request". It works just like the standard WebService(SOAP) Request.
+
+
 Implementing a simple Soap webservice
 =====================================
 
