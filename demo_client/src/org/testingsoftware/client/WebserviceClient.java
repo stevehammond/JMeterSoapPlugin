@@ -17,12 +17,12 @@ import javax.xml.transform.Source;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.ws.WebServiceMessageFactory;
-//import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
+import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
 import org.springframework.xml.transform.ResourceSource;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.ws.client.core.WebServiceTemplate;
 
-public class WebserviceClient {
+public class WebserviceClient extends WebServiceGatewaySupport {
     private static final String MESSAGE = "<soapenv:Envelope "
         + "xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" "
         + "xmlns:calc=\"http://www.testing-software.org/calc\">"
@@ -35,8 +35,14 @@ public class WebserviceClient {
         + "   </soapenv:Body>"
         + "</soapenv:Envelope>";
 
-    public static void main(String[] args) {
+    public WebserviceClient(WebServiceMessageFactory wsmf) {
+        super(wsmf);
+    }
 
+    public static void main(String[] args) {
+        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("webservice-config.xml");
+        WebserviceClient client = (WebserviceClient) context.getBean("webServiceClient");
+ 
         // ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(
         //     "webservice-config.xml");
         // WebserviceClient client = (WebserviceClient) context.getBean(
@@ -45,19 +51,20 @@ public class WebserviceClient {
             System.out.println("does not process any arguments!");
             System.exit(2);
         }
-        WebserviceClient.execute(MESSAGE);
+        client.execute(MESSAGE);
     }
 
-    private static void execute(String msg) {
+    private void execute(String msg) {
 
         WebServiceTemplate webServiceTemplate = new WebServiceTemplate();
 
         StreamSource source = new StreamSource(new StringReader(msg));
         StreamResult result = new StreamResult(System.out);
   
-        webServiceTemplate.sendSourceAndReceiveToResult(
-            "http://localhost:8080/demo_server.0.1/calc-service",
-            source, result);
+        //webServiceTemplate.sendSourceAndReceiveToResult(
+        // "http://localhost:8080/demo_server.0.1/calc-service",
+        // source, result);
+        getWebServiceTemplate().sendSourceAndReceiveToResult(source, result);
     }
 }
 

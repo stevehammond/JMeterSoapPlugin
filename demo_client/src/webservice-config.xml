@@ -7,11 +7,9 @@
     <bean id="messageFactory"
     	 class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/>
 
-    <bean id="webServiceTemplate" 
-    	 class="org.springframework.ws.client.core.WebServiceTemplate">
+    <bean id="webServiceClient" class="org.testingsoftware.client.WebserviceClient">
         <constructor-arg ref="messageFactory"/>
-        <property name="defaultUri" 
-        	 value="http://localhost:8080/demo_server.0.1/calc-service"/>
+        <property name="defaultUri" value="http://localhost:8080/demo_server.0.1/calc-service"/>
     </bean>
 
 </beans>
