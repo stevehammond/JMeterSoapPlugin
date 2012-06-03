@@ -26,83 +26,52 @@ import org.apache.jmeter.testbeans.BeanInfoSupport;
 public class JMeterSoapSamplerBeanInfo extends BeanInfoSupport {
 
     // These names must agree case-wise with the variable and property names
-    private static final String FILENAME = "filename";               //$NON-NLS-1$
-    private static final String FILE_ENCODING = "fileEncoding";      //$NON-NLS-1$
-    private static final String VARIABLE_NAMES = "variableNames";    //$NON-NLS-1$
-    private static final String DELIMITER = "delimiter";             //$NON-NLS-1$
-    private static final String RECYCLE = "recycle";                 //$NON-NLS-1$
-    private static final String STOPTHREAD = "stopThread";           //$NON-NLS-1$
-    private static final String QUOTED_DATA = "quotedData";          //$NON-NLS-1$
-    private static final String SHAREMODE = "shareMode";             //$NON-NLS-1$
-
-    private static final String[] SHARE_TAGS = new String[3];
-    static final int SHARE_ALL   = 0;
-    static final int SHARE_GROUP = 1;
-    static final int SHARE_THREAD  = 2;
+    private static final String HOST    = "host";      //$NON-NLS-1$
+    private static final String PORT    = "port";      //$NON-NLS-1$
+    private static final String PATH    = "path";      //$NON-NLS-1$
+    private static final String DATA    = "data";      //$NON-NLS-1$
+    private static final String USER    = "user";      //$NON-NLS-1$
+    private static final String PASSWORD = "password"; //$NON-NLS-1$
 
 
     public JMeterSoapSamplerBeanInfo() {
         super(JMeterSoapSampler.class);
 
         ResourceBundle rb = (ResourceBundle) getBeanDescriptor().getValue(RESOURCE_BUNDLE);
-//      These must agree with the resources
-        SHARE_TAGS[SHARE_ALL] = rb.getString("shareMode.all"); //$NON-NLS-1$
-        SHARE_TAGS[SHARE_GROUP] = rb.getString("shareMode.group"); //$NON-NLS-1$
-        SHARE_TAGS[SHARE_THREAD] = rb.getString("shareMode.thread"); //$NON-NLS-1$
 
-        createPropertyGroup("csv_data",             //$NON-NLS-1$
-                new String[] { FILENAME, FILE_ENCODING, VARIABLE_NAMES, DELIMITER, QUOTED_DATA, RECYCLE, STOPTHREAD, SHAREMODE });
+        // These must match with the resources
+        createPropertyGroup("webservice_config",       //$NON-NLS-1$
+                new String[] { HOST, PORT, PATH, DATA, USER, PASSWORD });
 
-        PropertyDescriptor p = property(FILENAME);
+        PropertyDescriptor p = property(HOST);
         p.setValue(NOT_UNDEFINED, Boolean.TRUE);
         p.setValue(DEFAULT, "");        //$NON-NLS-1$
         p.setValue(NOT_EXPRESSION, Boolean.TRUE);
 
-        p = property(FILE_ENCODING);
+        p = property(PORT);
         p.setValue(NOT_UNDEFINED, Boolean.TRUE);
         p.setValue(DEFAULT, "");        //$NON-NLS-1$
         p.setValue(NOT_EXPRESSION, Boolean.TRUE);
 
-        p = property(VARIABLE_NAMES);
+        p = property(PATH);
         p.setValue(NOT_UNDEFINED, Boolean.TRUE);
         p.setValue(DEFAULT, "");        //$NON-NLS-1$
         p.setValue(NOT_EXPRESSION, Boolean.TRUE);
 
-        p = property(DELIMITER);
+        p = property(DATA);
         p.setValue(NOT_UNDEFINED, Boolean.TRUE);
-        p.setValue(DEFAULT, ",");        //$NON-NLS-1$
+        p.setValue(DEFAULT, "");        //$NON-NLS-1$
         p.setValue(NOT_EXPRESSION, Boolean.TRUE);
 
-        p = property(QUOTED_DATA);
+        p = property(USER);
         p.setValue(NOT_UNDEFINED, Boolean.TRUE);
-        p.setValue(DEFAULT, Boolean.FALSE);
+        p.setValue(DEFAULT, "");        //$NON-NLS-1$
+        p.setValue(NOT_EXPRESSION, Boolean.TRUE);
 
-        p = property(RECYCLE);
+        p = property(PASSWORD);
         p.setValue(NOT_UNDEFINED, Boolean.TRUE);
-        p.setValue(DEFAULT, Boolean.TRUE);
+        p.setValue(DEFAULT, "");        //$NON-NLS-1$
+        p.setValue(NOT_EXPRESSION, Boolean.TRUE);
 
-        p = property(STOPTHREAD);
-        p.setValue(NOT_UNDEFINED, Boolean.TRUE);
-        p.setValue(DEFAULT, Boolean.FALSE);
-
-        p = property(SHAREMODE); //$NON-NLS-1$
-        p.setValue(NOT_UNDEFINED, Boolean.TRUE);
-        p.setValue(DEFAULT, SHARE_TAGS[0]);
-        p.setValue(NOT_OTHER, Boolean.FALSE);
-        p.setValue(NOT_EXPRESSION, Boolean.FALSE);
-        p.setValue(TAGS, SHARE_TAGS);
-    }
-
-    // TODO need to find better way to do this
-    public static int getShareModeAsInt(String mode) {
-        if (mode == null || mode.length() == 0){
-            return SHARE_ALL; // default (e.g. if test plan does not have definition)
-        }
-        for (int i = 0; i < SHARE_TAGS.length; i++) {
-            if (SHARE_TAGS[i].equals(mode)) {
-                return i;
-            }
-        }
-        return -1;
     }
 }

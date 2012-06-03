@@ -40,243 +40,95 @@ import org.apache.jorphan.util.JOrphanUtils;
 import org.apache.log.Logger;
 
 /**
- * Read lines from a file and split int variables.
- *
- * The iterationStart() method is used to set up each set of values.
- *
- * By default, the same file is shared between all threads
- * (and other thread groups, if they use the same file name).
- *
- * The shareMode can be set to:
- * <ul>
- * <li>All threads - default, as described above</li>
- * <li>Current thread group</li>
- * <li>Current thread</li>
- * <li>Identifier - all threads sharing the same identifier</li>
- * </ul>
- *
- * The class uses the FileServer alias mechanism to provide the different share modes.
- * For all threads, the file alias is set to the file name.
- * Otherwise, a suffix is appended to the filename to make it unique within the required context.
- * For current thread group, the thread group identityHashcode is used;
- * for individual threads, the thread hashcode is used as the suffix.
- * Or the user can provide their own suffix, in which case the file is shared between all
- * threads with the same suffix.
  *
  */
 public class JMeterSoapSampler extends AbstractSampler 
-    implements TestBean, LoopIterationListener, NoConfigMerge {
+    implements TestBean {
     private static final Logger log = LoggingManager.getLoggerForClass();
 
-    private static final long serialVersionUID = 232L;
+    private static final long serialVersionUID = 2323L;
 
-    private static final String EOFVALUE = // value to return at EOF
-        JMeterUtils.getPropDefault("csvdataset.eofstring", "<EOF>"); //$NON-NLS-1$ //$NON-NLS-2$
+    private transient String host;
 
-    private transient String filename;
+    private transient String port;
 
-    private transient String fileEncoding;
+    private transient String path;
 
-    private transient String variableNames;
+    private transient String data;
 
-    private transient String delimiter;
+    private transient String user;
 
-    private transient boolean quoted;
-
-    private transient boolean recycle = true;
-
-    private transient boolean stopThread;
-
-    private transient String[] vars;
-
-    private transient String alias;
-
-    private transient String shareMode;
-    
-    private boolean firstLineIsNames = false;
+    private transient String password;
 
 
     public SampleResult sample(Entry e) {
         log.debug("sampling");
         
         SampleResult res = new SampleResult();
+        res.setSampleLabel(getName());
+        res.setSamplerData(toString());
+        res.setDataType(SampleResult.TEXT);
+        // Bug 31184 - make sure encoding is specified
+        //res.setDataEncoding(System.getProperty("file.encoding"));
+
+        // Assume we will be successful
+        res.setSuccessful(true);
+
+        res.sampleStart();
+        res.setResponseData("say hi from soap plugin");
+
+        res.sampleEnd();
         return res;
+
     }
 
-    private Object readResolve(){
-        recycle = true;
-        return this;
+    // getters & setters
+    public String getHost() {
+        return host;
+    }
+ 
+    public void setHost(String host) {
+        this.host = host;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public void iterationStart(LoopIterationEvent iterEvent) {
-        FileServer server = FileServer.getFileServer();
-        final JMeterContext context = getThreadContext();
-        String delim = getDelimiter();
-        if (delim.equals("\\t")) { // $NON-NLS-1$
-            delim = "\t";// Make it easier to enter a Tab // $NON-NLS-1$
-        } else if (delim.length()==0){
-            log.warn("Empty delimiter converted to ','");
-            delim=",";
-        }
-        if (vars == null) {
-            String _fileName = getFilename();
-            String mode = getShareMode();
-            int modeInt = JMeterSoapSamplerBeanInfo.getShareModeAsInt(mode);
-            switch(modeInt){
-                case JMeterSoapSamplerBeanInfo.SHARE_ALL:
-                    alias = _fileName;
-                    break;
-                case JMeterSoapSamplerBeanInfo.SHARE_GROUP:
-                    alias = _fileName+"@"+System.identityHashCode(context.getThreadGroup());
-                    break;
-                case JMeterSoapSamplerBeanInfo.SHARE_THREAD:
-                    alias = _fileName+"@"+System.identityHashCode(context.getThread());
-                    break;
-                default:
-                    alias = _fileName+"@"+mode; // user-specified key
-                    break;
-            }
-            final String names = getVariableNames();
-            if (names == null || names.length()==0) {
-                String header = server.reserveFile(_fileName, getFileEncoding(), alias, true);
-                try {
-                    vars = CSVSaveService.csvSplitString(header, delim.charAt(0));
-                    firstLineIsNames = true;
-                } catch (IOException e) {
-                    log.warn("Could not split CSV header line",e);
-                }
-            } else {
-                server.reserveFile(_fileName, getFileEncoding(), alias);
-                vars = JOrphanUtils.split(names, ","); // $NON-NLS-1$
-            }
-        }
-           
-        // TODO: fetch this once as per vars above?
-        JMeterVariables threadVars = context.getVariables();
-        String line = null;
-        try {
-            line = server.readLine(alias, getRecycle(), firstLineIsNames);
-        } catch (IOException e) { // treat the same as EOF
-            log.error(e.toString());
-        }
-        if (line!=null) {// i.e. not EOF
-            try {
-                String[] lineValues = getQuotedData() ?
-                        CSVSaveService.csvSplitString(line, delim.charAt(0))
-                        : JOrphanUtils.split(line, delim, false);
-                for (int a = 0; a < vars.length && a < lineValues.length; a++) {
-                    threadVars.put(vars[a], lineValues[a]);
-                }
-            } catch (IOException e) { // Should only happen for quoting errors
-               log.error("Unexpected error splitting '"+line+"' on '"+delim.charAt(0)+"'");
-            }
-            // TODO - report unused columns?
-            // TODO - provide option to set unused variables ?
-        } else {
-            if (getStopThread()) {
-                throw new JMeterStopThreadException("End of file detected");
-            }
-            for (int a = 0; a < vars.length ; a++) {
-                threadVars.put(vars[a], EOFVALUE);
-            }
-        }
-    }
-
-    /**
-     * @return Returns the filename.
-     */
-    public String getFilename() {
-        return filename;
-    }
-
-    /**
-     * @param filename
-     *            The filename to set.
-     */
-    public void setFilename(String filename) {
-        this.filename = filename;
-    }
-
-    /**
-     * @return Returns the file encoding.
-     */
-    public String getFileEncoding() {
-        return fileEncoding;
-    }
-
-    /**
-     * @param fileEncoding
-     *            The fileEncoding to set.
-     */
-    public void setFileEncoding(String fileEncoding) {
-        this.fileEncoding = fileEncoding;
-    }
-
-    /**
-     * @return Returns the variableNames.
-     */
-    public String getVariableNames() {
-        return variableNames;
-    }
-
-    /**
-     * @param variableNames
-     *            The variableNames to set.
-     */
-    public void setVariableNames(String variableNames) {
-        this.variableNames = variableNames;
-    }
-
-    public String getDelimiter() {
-        return delimiter;
-    }
-
-    public void setDelimiter(String delimiter) {
-        this.delimiter = delimiter;
-    }
-
-    public boolean getQuotedData() {
-        return quoted;
-    }
-
-    public void setQuotedData(boolean quoted) {
-        this.quoted = quoted;
-    }
-
-    public boolean getRecycle() {
-        return recycle;
-    }
-
-    public void setRecycle(boolean recycle) {
-        this.recycle = recycle;
-    }
-
-    public boolean getStopThread() {
-        return stopThread;
-    }
-
-    public void setStopThread(boolean value) {
-        this.stopThread = value;
-    }
-
-    public String getShareMode() {
-        return shareMode;
-    }
-
-    public void setShareMode(String value) {
-        this.shareMode = value;
+    public String getPort() {
+        return port;
     }
     
-    /** 
-     * {@inheritDoc}}
-     */
-    @Override
-    public List<String> getSearchableTokens() throws Exception {
-        List<String> result = super.getSearchableTokens();
-        result.add(getPropertyAsString("variableNames"));
-        return result;
+    public void setPort(String port) {
+        this.port = port;
     }
+
+    public String getPath() {
+        return path;
+    }
+    
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public String getData() {
+        return data;
+    }
+    
+    public void setData(String data) {
+        this.data = data;
+    }
+
+    public String getUser() {
+        return user;
+    }
+    
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+    
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
 }
