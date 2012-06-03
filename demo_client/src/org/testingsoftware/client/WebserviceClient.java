@@ -14,35 +14,30 @@ import org.springframework.xml.transform.ResourceSource;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.ws.client.core.WebServiceTemplate;
 
-public class WebserviceClient extends WebServiceGatewaySupport {
+public class WebserviceClient {
 
     private static final String MESSAGE = "      <calc:addRequest xmlns:calc=\"http://www.testing-software.org/calc\" >"
         + "         <calc:a>20</calc:a>"
         + "         <calc:b>10</calc:b>"
         + "      </calc:addRequest>";
 
-    public WebserviceClient(WebServiceMessageFactory wsmf) {
-        super(wsmf);
-    }
-
     public static void main(String[] args) {
-        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("webservice-config.xml");
-        WebserviceClient client = (WebserviceClient) context.getBean("webServiceClient");
-
         if (args.length != 0) {
             System.out.println("does not process any arguments!");
             System.exit(2);
         }
-        client.execute(MESSAGE);
+        WebserviceClient.execute(MESSAGE);
     }
 
-    private void execute(String msg) {
+    private static void execute(String msg) {
 
         WebServiceTemplate webServiceTemplate = new WebServiceTemplate();
 
         StreamSource source = new StreamSource(new StringReader(msg));
         StreamResult result = new StreamResult(System.out);
 
-        getWebServiceTemplate().sendSourceAndReceiveToResult(source, result);
+        webServiceTemplate.sendSourceAndReceiveToResult(
+            "http://localhost:8080/demo_server.0.1/calc-service",
+            source, result);
     }
 }
