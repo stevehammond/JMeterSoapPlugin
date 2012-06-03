@@ -54,11 +54,11 @@ public class JMeterSoapSampler extends AbstractSampler
 
     private transient String path;
 
-    private transient String data;
-
     private transient String user;
 
     private transient String password;
+
+    private transient String data;
 
 
     public SampleResult sample(Entry e) {

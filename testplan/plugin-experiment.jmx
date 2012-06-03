@@ -44,7 +44,7 @@
           <boolProp name="perThread">false</boolProp>
         </RandomVariableConfig>
         <hashTree/>
-        <org.testingsoftware.JMeterSoapPlugin.sampler.JMeterSoapSampler guiclass="TestBeanGUI" testclass="org.testingsoftware.JMeterSoapPlugin.sampler.JMeterSoapSampler" testname="Plugin2 Config" enabled="true">
+        <org.testingsoftware.JMeterSoapPlugin.sampler.JMeterSoapSampler guiclass="TestBeanGUI" testclass="org.testingsoftware.JMeterSoapPlugin.sampler.JMeterSoapSampler" testname="My Auth Soap Request" enabled="true">
           <stringProp name="data">data</stringProp>
           <stringProp name="host">host</stringProp>
           <stringProp name="password">password</stringProp>

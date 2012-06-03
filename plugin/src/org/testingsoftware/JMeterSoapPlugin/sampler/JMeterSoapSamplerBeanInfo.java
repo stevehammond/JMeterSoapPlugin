@@ -22,6 +22,8 @@ import java.beans.PropertyDescriptor;
 import java.util.ResourceBundle;
 
 import org.apache.jmeter.testbeans.BeanInfoSupport;
+import org.apache.jmeter.testbeans.gui.TextAreaEditor;
+import org.apache.jmeter.testbeans.gui.PasswordEditor;
 
 public class JMeterSoapSamplerBeanInfo extends BeanInfoSupport {
 
@@ -41,7 +43,7 @@ public class JMeterSoapSamplerBeanInfo extends BeanInfoSupport {
 
         // These must match with the resources
         createPropertyGroup("webservice_config",       //$NON-NLS-1$
-                new String[] { HOST, PORT, PATH, DATA, USER, PASSWORD });
+                new String[] { HOST, PORT, PATH, USER, PASSWORD, DATA });
 
         PropertyDescriptor p = property(HOST);
         p.setValue(NOT_UNDEFINED, Boolean.TRUE);
@@ -58,11 +60,6 @@ public class JMeterSoapSamplerBeanInfo extends BeanInfoSupport {
         p.setValue(DEFAULT, "");        //$NON-NLS-1$
         p.setValue(NOT_EXPRESSION, Boolean.TRUE);
 
-        p = property(DATA);
-        p.setValue(NOT_UNDEFINED, Boolean.TRUE);
-        p.setValue(DEFAULT, "");        //$NON-NLS-1$
-        p.setValue(NOT_EXPRESSION, Boolean.TRUE);
-
         p = property(USER);
         p.setValue(NOT_UNDEFINED, Boolean.TRUE);
         p.setValue(DEFAULT, "");        //$NON-NLS-1$
@@ -72,6 +69,13 @@ public class JMeterSoapSamplerBeanInfo extends BeanInfoSupport {
         p.setValue(NOT_UNDEFINED, Boolean.TRUE);
         p.setValue(DEFAULT, "");        //$NON-NLS-1$
         p.setValue(NOT_EXPRESSION, Boolean.TRUE);
+        p.setPropertyEditorClass(PasswordEditor.class);
+
+        p = property(DATA);
+        p.setValue(NOT_UNDEFINED, Boolean.TRUE);
+        p.setValue(DEFAULT, "");        //$NON-NLS-1$
+        p.setValue(NOT_EXPRESSION, Boolean.TRUE);
+        p.setPropertyEditorClass(TextAreaEditor.class);
 
     }
 }
