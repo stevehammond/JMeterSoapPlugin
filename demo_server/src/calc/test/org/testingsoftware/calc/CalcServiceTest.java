@@ -26,9 +26,9 @@ public class CalcServiceTest {
 	@Qualifier("webServiceTemplate")
 	private WebServiceTemplate webServiceTemplate;
 
-	// @Autowired
-	// @Qualifier("webServiceTemplateWithClientValidator")
-	// private WebServiceTemplate webServiceTemplateWithClientValidator;
+	@Autowired
+	@Qualifier("webServiceTemplateWithClientValidator")
+	private WebServiceTemplate webServiceTemplateWithClientValidator;
 
 	@Test
 	public void testCalcService() {
@@ -42,50 +42,36 @@ public class CalcServiceTest {
 		assertEquals(BigInteger.valueOf(30), response.getResult());
 	}
 
-/*
-	@Test(expected = SoapFaultClientException.class)
-	public void testCalcServiceWithTooLongAccountNumber() {
-
-		CalcRequest request = new CalcRequest();
-		request.setName("yyy");
-		request.setNumber("xxx");
-
-		webServiceTemplate.marshalSendAndReceive(request);
-	}
 
 	@Test(expected = SoapFaultClientException.class)
-	public void testCalcServiceWithInvalidAccountNumber() {
+	public void testCalcServiceWithNegativeNumberArgument() {
 
-		CalcRequest request = new CalcRequest();
-		request.setName("dd");
-		request.setNumber("ccc");
-
-		webServiceTemplate.marshalSendAndReceive(request);
+		AddRequest request = new AddRequest();
+		request.setA(BigInteger.valueOf(-1));
+		request.setB(BigInteger.valueOf(20));
+		AddResponse response = (AddResponse) webServiceTemplate
+				.marshalSendAndReceive(request);
 	}
+
 
 	@Test
 	public void testCalcServiceWithClientValidator() {
 
-		CalcRequest request = new ObjectFactory()
-				.createCalcRequest(); 
-		request.setName("dd");
-		request.setNumber("dd");
-		CalcResponse response = (CalcResponse) webServiceTemplateWithClientValidator
+		AddRequest request = new ObjectFactory().createAddRequest();
+		request.setA(BigInteger.valueOf(10));
+		request.setB(BigInteger.valueOf(20));
+		AddResponse response = (AddResponse) webServiceTemplate
 				.marshalSendAndReceive(request);
 
-		assertEquals(BigDecimal.valueOf(100.5), response.getBalance());
+		assertEquals(BigInteger.valueOf(30), response.getResult());
 	}
 
 	@Test(expected = WebServiceValidationException.class)
-	public void testCalcServiceWithClientValidatorAndTooLongAccountNumber() {
+	public void testCalcServiceWithClientValidatorAndNegativeNumberArgument() {
 
-		CalcRequest request = new ObjectFactory()
-				.createCalcRequest(); 
-		request.setName("ccc");
-		request.setNumber("ccc");
-
+		AddRequest request = new ObjectFactory().createAddRequest();
+		request.setA(BigInteger.valueOf(-1));
+		request.setB(BigInteger.valueOf(20));
 		webServiceTemplateWithClientValidator.marshalSendAndReceive(request);
-
 	}
-	*/
 }

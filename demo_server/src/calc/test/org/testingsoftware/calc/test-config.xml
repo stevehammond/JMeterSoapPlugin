@@ -15,7 +15,7 @@
 			value="http://localhost:8080/demo_server.0.1/calc-service" />
 	</bean>
 
-	<!--bean id="webServiceTemplateWithClientValidator" class="org.springframework.ws.client.core.WebServiceTemplate">
+	<bean id="webServiceTemplateWithClientValidator" class="org.springframework.ws.client.core.WebServiceTemplate">
 
 		<property name="marshaller" ref="marshaller" />
 		<property name="unmarshaller" ref="marshaller" />
@@ -29,14 +29,14 @@
 	</bean>
 
 	<bean id="payloadValidatingInterceptorWithSourceFix"
-		class="com.redpill.linpro.transport.account.ws.PayloadValidatingInterceptorWithSourceFix">
+		class="org.testingsoftware.calc.PayloadValidatingInterceptorWithSourceFix">
 		<property name="schema"
-			value="file:WebContent/WEB-INF/schemas/account-balance-service.xsd" />
+			value="file:src/calc/resources/WEB-INF/calc.xsd" />
 		<property name="validateRequest" value="true" />
 		<property name="validateResponse" value="true" />
 	</bean>
 
-	<bean id="payloadValidatingInterceptor"
+	<!--bean id="payloadValidatingInterceptor"
 		class="org.springframework.ws.client.support.interceptor.PayloadValidatingInterceptor">
 		<property name="schema"
 			value="file:WebContent/WEB-INF/schemas/account-balance-service.xsd" />

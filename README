@@ -144,12 +144,44 @@ Once you provide valid input like the following:
 Now the demo_server is ready to be used.
 
 
-Implementing a simple Soap webservice client
-============================================
+Implementing a simple Soap webservice test (client)
+===================================================
 
-This section describes how I created a simple webservice client. I started from this excellent tutorial:
+This section describes how I created a simple webservice test. The test runs against a real webservice (see above). I started from this excellent tutorial:
 http://blog.espenberntsen.net/2010/02/28/spring-ws-client/
 
+The junit testcase looks like the following (all in src/test/...):
 
+public class CalcServiceTest {
 
+  @Autowired
+  @Qualifier("webServiceTemplate")
+  private WebServiceTemplate webServiceTemplate;
 
+  @Test
+  public void testCalcService() {
+
+    AddRequest request = new ObjectFactory().createAddRequest();
+    request.setA(BigInteger.valueOf(10));
+    request.setB(BigInteger.valueOf(20));
+    AddResponse response = (AddResponse) webServiceTemplate
+        .marshalSendAndReceive(request);
+
+    assertEquals(BigInteger.valueOf(30), response.getResult());
+  }
+  (... more tests here)
+
+The test needs wiring information in test-config.xml:
+
+  <bean id="webServiceTemplate" class="org.springframework.ws.client.core.WebServiceTemplate">
+
+    <property name="marshaller" ref="marshaller" />
+    <property name="unmarshaller" ref="marshaller" />
+    <property name="defaultUri"
+      value="http://localhost:8080/demo_server.0.1/calc-service" />
+  </bean>
+
+Now you can run the test (make sure the server is started):
+ant test
+
+Once the test passes you will find a nice HTML test report (testreport/index.html).
