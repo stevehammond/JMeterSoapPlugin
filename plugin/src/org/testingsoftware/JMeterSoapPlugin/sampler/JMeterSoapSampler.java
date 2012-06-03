@@ -45,6 +45,7 @@ import javax.xml.transform.stream.StreamSource;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.ResourceSource;
 import org.springframework.ws.client.core.WebServiceTemplate;
+import org.springframework.ws.soap.security.wss4j.Wss4jSecurityInterceptor;
 
 /**
  *
@@ -75,6 +76,12 @@ public class JMeterSoapSampler extends AbstractSampler
 
         StreamSource source = new StreamSource(new StringReader(msg));
         StringResult result = new StringResult();
+
+        // add the security interceptor
+        Wss4jSecurityInterceptor interceptor = (Wss4jSecurityInterceptor) ctx.getBean("wsSecurityInterceptor");
+        interceptor.setSecurementUsername(getUser());
+        interceptor.setSecurementPassword(getPassword());
+        webServiceTemplate.setInterceptors(new Wss4jSecurityInterceptor[]{interceptor});
 
         webServiceTemplate.sendSourceAndReceiveToResult(uri, source, result);
         return result.toString();

@@ -20,9 +20,37 @@
         class="org.springframework.ws.server.endpoint.mapping.PayloadRootAnnotationMethodEndpointMapping">
         <property name="interceptors">
             <list>
+                <ref local="wsServerSecurityInterceptor" />  
                 <ref local="validatingInterceptor" />
             </list>
         </property>
+    </bean>
+
+    <bean id="wsServerSecurityInterceptor"  class="org.springframework.ws.soap.security.wss4j.Wss4jSecurityInterceptor">
+        <!-- Validation part -->
+        <property name="validationActions" value="Timestamp Signature Encrypt"/>
+        <property name="validationSignatureCrypto" ref="serverCrypto"/>
+        <property name="validationDecryptionCrypto" ref="serverCrypto"/>
+        <property name="validationCallbackHandler">
+            <bean class="org.springframework.ws.soap.security.wss4j.callback.KeyStoreCallbackHandler">
+                <property name="keyStore">
+                    <bean class="org.springframework.ws.soap.security.support.KeyStoreFactoryBean">
+                        <property name="password" value="mypasswd"/>
+                    </bean>
+                </property>
+                <property name="privateKeyPassword" value=""/>
+            </bean>
+        </property>
+        <!-- Sign the response -->
+        <property name="securementActions" value="Signature" />
+        <property name="securementUsername" value="server" />
+        <property name="securementPassword" value="" />
+        <property name="securementSignatureCrypto" ref="serverCrypto"/>
+    </bean>
+
+    <bean id="serverCrypto" class="org.springframework.ws.soap.security.wss4j.support.CryptoFactoryBean">
+        <property name="keyStorePassword" value="mypasswd"/>
+        <property name="keyStoreLocation" value="classpath:security/server-keystore.jks"/>
     </bean>
 
     <bean class="org.springframework.ws.soap.server.endpoint.SoapFaultAnnotationExceptionResolver" />
