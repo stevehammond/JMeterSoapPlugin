@@ -23,17 +23,11 @@ import org.springframework.xml.transform.StringResult;
 import org.springframework.ws.client.core.WebServiceTemplate;
 
 public class WebserviceClient extends WebServiceGatewaySupport {
-    private static final String MESSAGE = "<soapenv:Envelope "
-        + "xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" "
-        + "xmlns:calc=\"http://www.testing-software.org/calc\">"
-        + "<soapenv:Header/>"
-        + "   <soapenv:Body>"
-        + "      <calc:addRequest>"
+
+    private static final String MESSAGE = "      <calc:addRequest xmlns:calc=\"http://www.testing-software.org/calc\" >"
         + "         <calc:a>20</calc:a>"
         + "         <calc:b>10</calc:b>"
-        + "      </calc:addRequest>"
-        + "   </soapenv:Body>"
-        + "</soapenv:Envelope>";
+        + "      </calc:addRequest>";
 
     public WebserviceClient(WebServiceMessageFactory wsmf) {
         super(wsmf);
@@ -60,7 +54,7 @@ public class WebserviceClient extends WebServiceGatewaySupport {
 
         StreamSource source = new StreamSource(new StringReader(msg));
         StreamResult result = new StreamResult(System.out);
-  
+
         //webServiceTemplate.sendSourceAndReceiveToResult(
         // "http://localhost:8080/demo_server.0.1/calc-service",
         // source, result);

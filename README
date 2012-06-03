@@ -102,7 +102,7 @@ http://localhost:8080/demo_server.0.1/calc-service/calcServiceDefinition.wsdl
 Playing with the demo_server
 ----------------------------
 
-In case you do not provide valid integers as parameters, you get a nice SoapFault:
+In case you do not provide valid parameters, you get a nice SoapFault:
 
 <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
    <SOAP-ENV:Header/>
@@ -129,6 +129,9 @@ Once you provide valid input like the following:
       </calc:addRequest>
    </soapenv:Body>
 </soapenv:Envelope>
+
+You can do that for example using curl (on the command line):
+curl -X POST -H 'Content-type: text/xml' --data @soap_request.xml http://localhost:8080/demo_server.0.1/calc-service
 
 ...the CalcService does a nice job:
 
