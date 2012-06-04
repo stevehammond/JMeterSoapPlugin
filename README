@@ -12,7 +12,8 @@ You will also need the spring-ws client libraries.
 Additional libs for JMeter in lib/ext:
 o spring-ws-2.1.0.RELEASE-all
 o springframework.*-3.1.0.RELEASE
-o 
+o wss4j-1.6.6.jar
+o xmlsec-1.5.2.jar
 
 
 Implementing a simple Soap webservice
@@ -89,19 +90,19 @@ You don’t need to create a WSDL file with Spring WS. WSDL4J does create the WS
 Building the war file
 ---------------------
 
-To build just run ant:
+To build just run maven:
 
-ant
+mvn package
 
 
-Deploying the demo_server webservice and starting Tomcat
---------------------------------------------------------
+Running demo_server using Tomcat
+--------------------------------
 
-Copy the demo_server.0.1.war you find in the dist folder to your Tomcat webapps folder. Then start Tomcat:
-./server.sh
+Start Tomcat using maven: 
+mvn tomcat:run
 
 Now you can access the new service:
-http://localhost:8080/demo_server.0.1/calc-service/calcServiceDefinition.wsdl
+http://localhost:8080/demo_server/calc-service/calcServiceDefinition.wsdl
 
 
 Playing with the demo_server
@@ -136,7 +137,7 @@ Once you provide valid input like the following:
 </soapenv:Envelope>
 
 You can do that for example using curl (on the command line):
-curl -X POST -H 'Content-type: text/xml' --data @soap_request.xml http://localhost:8080/demo_server.0.1/calc-service
+curl -X POST -H 'Content-type: text/xml' --data @soap_request.xml http://localhost:8080/demo_server/calc-service
 
 ...the CalcService does a nice job:
 
@@ -186,10 +187,7 @@ The test needs wiring information in test-config.xml:
     <property name="marshaller" ref="marshaller" />
     <property name="unmarshaller" ref="marshaller" />
     <property name="defaultUri"
-      value="http://localhost:8080/demo_server.0.1/calc-service" />
+      value="http://localhost:8080/demo_server/calc-service" />
   </bean>
 
-Now you can run the test (make sure the server is started):
-ant test
-
-Once the test passes you will find a nice HTML test report (testreport/index.html).
+Now you can run the test (make sure the server is started).

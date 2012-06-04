@@ -10,9 +10,14 @@ apache-jmeter*/
 apache-tomcat*/
 soapui*/
 testresults/
+target/
+.settings/
 
 *.*~
 *~
 .coverage
 *.bak
 *.tar.gz
+.project
+.classpath
+.springBeans

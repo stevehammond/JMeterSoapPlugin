@@ -45,15 +45,20 @@
         </RandomVariableConfig>
         <hashTree/>
         <org.testingsoftware.JMeterSoapPlugin.sampler.JMeterSoapSampler guiclass="TestBeanGUI" testclass="org.testingsoftware.JMeterSoapPlugin.sampler.JMeterSoapSampler" testname="My Auth Soap Request" enabled="true">
-          <stringProp name="data">&lt;calc:addRequest xmlns:calc=&quot;http://www.testing-software.org/calc&quot; &gt;
-    &lt;calc:a&gt;${a}&lt;/calc:a&gt;
-    &lt;calc:b&gt;${b}&lt;/calc:b&gt;
-&lt;/calc:addRequest&gt;</stringProp>
+          <stringProp name="data">&lt;soapenv:Envelope xmlns:soapenv=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot; xmlns:calc=&quot;http://www.testing-software.org/calc&quot;&gt;
+   &lt;soapenv:Header/&gt;
+   &lt;soapenv:Body&gt;
+      &lt;calc:addRequest&gt;
+         &lt;calc:a&gt;${a}&lt;/calc:a&gt;
+         &lt;calc:b&gt;${b}&lt;/calc:b&gt;
+      &lt;/calc:addRequest&gt;
+   &lt;/soapenv:Body&gt;
+&lt;/soapenv:Envelope&gt;</stringProp>
           <stringProp name="host">localhost</stringProp>
-          <stringProp name="password">123</stringProp>
-          <stringProp name="path">/demo_server.0.1/calc-service</stringProp>
+          <stringProp name="password">secret</stringProp>
+          <stringProp name="path">/demo_server/calc-service</stringProp>
           <stringProp name="port">8080</stringProp>
-          <stringProp name="user">mark</stringProp>
+          <stringProp name="user">ernie</stringProp>
         </org.testingsoftware.JMeterSoapPlugin.sampler.JMeterSoapSampler>
         <hashTree>
           <XPathAssertion guiclass="XPathAssertionGui" testclass="XPathAssertion" testname="Check for SoapFault" enabled="true">
