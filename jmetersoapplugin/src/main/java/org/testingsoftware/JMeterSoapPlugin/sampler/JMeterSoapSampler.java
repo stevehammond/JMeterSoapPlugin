@@ -43,6 +43,8 @@ public class JMeterSoapSampler extends AbstractSampler
 
     private static final long serialVersionUID = 2323L;
 
+	private transient String protocol;
+
     private transient String host;
 
     private transient String port;
@@ -62,23 +64,27 @@ public class JMeterSoapSampler extends AbstractSampler
         StreamSource source = new StreamSource(new StringReader("<n/>"));
         StringResult result = new StringResult();
 
-        // add the security interceptor
-		Wss4jSecurityInterceptor securityInterceptor = new Wss4jSecurityInterceptor();
-		securityInterceptor.setSecurementActions("UsernameToken");
-		securityInterceptor.setSecurementUsername(getUser());
-		securityInterceptor.setSecurementPassword(getPassword());
-		securityInterceptor.setSecurementPasswordType(WSConstants.PW_DIGEST);
-		try {
-			securityInterceptor.afterPropertiesSet();
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-		
 		SoapMessageInterceptor messageInterceptor = new SoapMessageInterceptor(msg);
-
         WebServiceTemplate webServiceTemplate = new WebServiceTemplate();
-		webServiceTemplate
-				.setInterceptors(new ClientInterceptor[] { messageInterceptor, securityInterceptor });
+
+        if (getUser().length() > 0) {
+        	// add the security interceptor
+			Wss4jSecurityInterceptor securityInterceptor = new Wss4jSecurityInterceptor();
+			securityInterceptor.setSecurementActions("UsernameToken");
+			securityInterceptor.setSecurementUsername(getUser());
+			securityInterceptor.setSecurementPassword(getPassword());
+			securityInterceptor.setSecurementPasswordType(WSConstants.PW_DIGEST);
+			try {
+				securityInterceptor.afterPropertiesSet();
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+			webServiceTemplate
+			.setInterceptors(new ClientInterceptor[] { messageInterceptor, securityInterceptor });
+        } else {
+    		webServiceTemplate
+			.setInterceptors(new ClientInterceptor[] { messageInterceptor });
+        }
 		webServiceTemplate.afterPropertiesSet();
 
         webServiceTemplate.sendSourceAndReceiveToResult(uri, source, result);
@@ -99,17 +105,21 @@ public class JMeterSoapSampler extends AbstractSampler
 
         res.sampleStart();
 
-        String uri = "http://" + getHost() + ":" + getPort() + getPath();
-        log.info("uri: " + uri);
-        log.info("request" + getData());
+        String uri = getProtocol() + "://" + getHost() + ":" + getPort() + getPath();
+        log.debug("uri: " + uri);
+        log.debug("request" + getData());
 
         res.setSuccessful(true);
+        res.setResponseCode("200");
+        res.setResponseMessage("OK");
         String result;
         try {
         	result = sendSoapMsg(uri, getData());
             res.setResponseData(result);
         } catch (Exception e1) {
             res.setSuccessful(false);
+            res.setResponseCode("400");
+            res.setResponseMessage("Bad request");
             log.error("Exception while sending Soap request:\n" + e1);
             res.setResponseData("Exception while sending Soap request:\n" + e1);
         }
@@ -125,6 +135,14 @@ public class JMeterSoapSampler extends AbstractSampler
 
 
     // getters & setters
+    public String getProtocol() {
+        return protocol;
+    }
+    
+    public void setProtocol(String protocol) {
+        this.protocol = protocol;
+    }
+
     public String getHost() {
         return host;
     }

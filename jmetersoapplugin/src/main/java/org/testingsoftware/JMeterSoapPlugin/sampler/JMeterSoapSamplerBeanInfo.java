@@ -28,24 +28,30 @@ import org.apache.jmeter.testbeans.gui.PasswordEditor;
 public class JMeterSoapSamplerBeanInfo extends BeanInfoSupport {
 
     // These names must agree case-wise with the variable and property names
-    private static final String HOST    = "host";      //$NON-NLS-1$
-    private static final String PORT    = "port";      //$NON-NLS-1$
-    private static final String PATH    = "path";      //$NON-NLS-1$
-    private static final String DATA    = "data";      //$NON-NLS-1$
-    private static final String USER    = "user";      //$NON-NLS-1$
+    private static final String PROTOCOL = "protocol"; //$NON-NLS-1$
+    private static final String HOST     = "host";     //$NON-NLS-1$
+    private static final String PORT     = "port";     //$NON-NLS-1$
+    private static final String PATH     = "path";     //$NON-NLS-1$
+    private static final String DATA     = "data";     //$NON-NLS-1$
+    private static final String USER     = "user";     //$NON-NLS-1$
     private static final String PASSWORD = "password"; //$NON-NLS-1$
 
 
     public JMeterSoapSamplerBeanInfo() {
         super(JMeterSoapSampler.class);
 
-        ResourceBundle rb = (ResourceBundle) getBeanDescriptor().getValue(RESOURCE_BUNDLE);
+        //ResourceBundle rb = (ResourceBundle) getBeanDescriptor().getValue(RESOURCE_BUNDLE);
 
         // These must match with the resources
         createPropertyGroup("webservice_config",       //$NON-NLS-1$
-                new String[] { HOST, PORT, PATH, USER, PASSWORD, DATA });
+                new String[] {  PROTOCOL, HOST, PORT, PATH, USER, PASSWORD, DATA });
 
-        PropertyDescriptor p = property(HOST);
+        PropertyDescriptor p = property(PROTOCOL);
+        p.setValue(NOT_UNDEFINED, Boolean.TRUE);
+        p.setValue(DEFAULT, "http");
+        p.setValue(NOT_EXPRESSION, Boolean.TRUE);
+        
+        p = property(HOST);
         p.setValue(NOT_UNDEFINED, Boolean.TRUE);
         p.setValue(DEFAULT, "");        //$NON-NLS-1$
         p.setValue(NOT_EXPRESSION, Boolean.TRUE);

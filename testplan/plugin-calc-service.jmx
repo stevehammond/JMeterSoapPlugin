@@ -59,6 +59,7 @@
           <stringProp name="path">/demo_server/calc-service</stringProp>
           <stringProp name="port">8080</stringProp>
           <stringProp name="user">ernie</stringProp>
+          <stringProp name="protocol">http</stringProp>
         </org.testingsoftware.JMeterSoapPlugin.sampler.JMeterSoapSampler>
         <hashTree>
           <XPathAssertion guiclass="XPathAssertionGui" testclass="XPathAssertion" testname="Check for SoapFault" enabled="true">
